@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/Calificacion.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/PromocionRestaurante.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Run/GeneradorDeCodigos.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/Estancia.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/Habitacion.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/Alimento.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/PromocionHotel.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Registro/RegistroDeEmpresas.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/Empresa.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/gui/Frames/RootFrame.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/gui/Frames/LoginFrame.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Run/Run.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Conexion/ManejadorDeConexion.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/Cliente.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/Reservacion.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Entidades/Empleado.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/gui/Frames/FramePrincipal.java</file>
+            <file>file:/home/jesfrin/NetBeansProjects/AplicacionParaEmpleados/src/Empresa/backend/Registro/BusquedaDeEmpresas.java</file>
+        </group>
+    </open-files>
+</project-private>
