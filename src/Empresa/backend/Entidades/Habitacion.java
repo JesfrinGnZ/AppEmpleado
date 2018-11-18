@@ -15,15 +15,17 @@ public class Habitacion {
     private String TipoDeHabitacion;
     private double CostoPorNoche;
     private double CostoDeMantnimiento;
-    private String CodigoDeHabitacion;
+    private int numeroDeHabitacion;
+    private String estaActiva;
 
-    public Habitacion(String CodigoDeHotel, int Piso, String TipoDeHabitacion, double CostoPorNoche, double CostoDeMantnimiento, String CodigoDeHabitacion) {
+    public Habitacion(String CodigoDeHotel, int Piso, String TipoDeHabitacion, double CostoPorNoche, double CostoDeMantnimiento, int numeroDeHabitacion,String estaActiva) {
         this.CodigoDeHotel = CodigoDeHotel;
         this.Piso = Piso;
         this.TipoDeHabitacion = TipoDeHabitacion;
         this.CostoPorNoche = CostoPorNoche;
         this.CostoDeMantnimiento = CostoDeMantnimiento;
-        this.CodigoDeHabitacion = CodigoDeHabitacion;
+        this.numeroDeHabitacion = numeroDeHabitacion;
+        this.estaActiva=estaActiva;
     }
 
     public String getCodigoDeHotel() {
@@ -66,13 +68,22 @@ public class Habitacion {
         this.CostoDeMantnimiento = CostoDeMantnimiento;
     }
 
-    public String getCodigoDeHabitacion() {
-        return CodigoDeHabitacion;
+    public int getNumeroDeHabitacion() {
+        return numeroDeHabitacion;
     }
 
-    public void setCodigoDeHabitacion(String CodigoDeHabitacion) {
-        this.CodigoDeHabitacion = CodigoDeHabitacion;
+    public void setNumeroDeHabitacion(int numeroDeHabitacion) {
+        this.numeroDeHabitacion = numeroDeHabitacion;
     }
-    
-    
+
+  
+
+    public String getEstaActiva() {
+        return estaActiva;
+    }
+
+    public void setEstaActiva(String estaActiva) {
+        this.estaActiva = estaActiva;
+    }
+
 }

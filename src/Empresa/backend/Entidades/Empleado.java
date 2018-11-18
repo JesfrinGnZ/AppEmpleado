@@ -10,14 +10,15 @@ package Empresa.backend.Entidades;
  * @author jesfrin
  */
 public class Empleado {
-    
+    private String nombre;
     private String idEmpleado;
     private String contrasenaEmpleado;
     private String tipoDeEmpleado;
     private String codigoDeEmpresaParaEmpleado;
-    private boolean pagoSemanal;
+    private double pagoSemanal;
 
-    public Empleado(String idEmpleado, String contrasenaEmpleado, String tipoDeEmpleado, String codigoDeEmpresaParaEmpleado, boolean pagoSemanal) {
+    public Empleado(String nombre,String idEmpleado, String contrasenaEmpleado, String tipoDeEmpleado, String codigoDeEmpresaParaEmpleado, double pagoSemanal) {
+        this.nombre=nombre;
         this.idEmpleado = idEmpleado;
         this.contrasenaEmpleado = contrasenaEmpleado;
         this.tipoDeEmpleado = tipoDeEmpleado;
@@ -29,6 +30,14 @@ public class Empleado {
         this.idEmpleado = idEmpleado;
         this.contrasenaEmpleado = contrasenaEmpleado;
         this.tipoDeEmpleado = tipoDeEmpleado;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getIdEmpleado() {
@@ -63,12 +72,14 @@ public class Empleado {
         this.codigoDeEmpresaParaEmpleado = codigoDeEmpresaParaEmpleado;
     }
 
-    public boolean isPagoSemanal() {
+    public double getPagoSemanal() {
         return pagoSemanal;
     }
 
-    public void setPagoSemanal(boolean pagoSemanal) {
+    public void setPagoSemanal(double pagoSemanal) {
         this.pagoSemanal = pagoSemanal;
     }
+
+
     
 }
