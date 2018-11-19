@@ -6,7 +6,7 @@
 package Empresa.backend.Run;
 
 import Empresa.backend.Entidades.Empleado;
-import Empresa.gui.Frames.LoginFrame;
+import Empresa.gui.Frames.LoginFrame1;
 
 /**
  *
@@ -18,7 +18,7 @@ public class Run {
     
     
     public static void main(String[] args) {
-        LoginFrame nuevoLogin = new LoginFrame();
+        LoginFrame1 nuevoLogin = new LoginFrame1();
         nuevoLogin.setVisible(true);
     }
 }

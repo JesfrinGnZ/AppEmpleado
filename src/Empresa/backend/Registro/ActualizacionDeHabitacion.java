@@ -16,16 +16,16 @@ import java.sql.SQLException;
  */
 public class ActualizacionDeHabitacion {
 
-    public void actualizarHabitacion(Habitacion nuevaHabitacion,int numeroDeHabitacion) throws SQLException {
+    public void actualizarHabitacion(Habitacion nuevaHabitacion,String codigoHabitacion) throws SQLException {
         ManejadorDeConexion nuevaConexion = new ManejadorDeConexion();
-        String instruccionSql = "UPDATE HABITACION SET Piso=?, TipoDeHabitacion=?, CostoPorNoche=?, CostoDeMantnimiento=? , EstaActiva=? WHERE NumeroDeHabitacion =?";
+        String instruccionSql = "UPDATE HABITACION SET Piso=?, TipoDeHabitacion=?, CostoPorNoche=?, CostoDeMantnimiento=? , EstaActiva=? WHERE CodigoDeHabitacion =?";
         PreparedStatement miPreparedStatement = nuevaConexion.getMiConexion().prepareStatement(instruccionSql);
         miPreparedStatement.setInt(1, nuevaHabitacion.getPiso());
         miPreparedStatement.setString(2, nuevaHabitacion.getTipoDeHabitacion());
         miPreparedStatement.setDouble(3, nuevaHabitacion.getCostoPorNoche());
         miPreparedStatement.setDouble(4, nuevaHabitacion.getCostoDeMantnimiento());
         miPreparedStatement.setString(5, nuevaHabitacion.getEstaActiva());
-        miPreparedStatement.setInt(6,numeroDeHabitacion);
+        miPreparedStatement.setString(6,codigoHabitacion);
         miPreparedStatement.execute();
         nuevaConexion.cerrarConexion();
 

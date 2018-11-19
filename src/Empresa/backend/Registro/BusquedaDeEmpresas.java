@@ -69,4 +69,23 @@ public class BusquedaDeEmpresas {
         nuevaConexion.cerrarConexion();
         return listaDeEmpresas;
     }
+    
+    public Empresa buscarEmpresa(String codigoEmpresa) throws SQLException {
+        ManejadorDeConexion nuevaConexion = new ManejadorDeConexion();
+        Empresa empresaEncontrada = null;
+        String instruccionSql = "SELECT * FROM EMPRESA WHERE CodigoDeEmpresa=?";
+        PreparedStatement instruccionPreparada = nuevaConexion.getMiConexion().prepareStatement(instruccionSql);
+        instruccionPreparada.setString(1, codigoEmpresa);
+        ResultSet miResult = instruccionPreparada.executeQuery();
+        while (miResult.next()) {
+            String tipoEmpresa = miResult.getString(1);
+            String nombreDeEmpresa = miResult.getString(2);
+            String direccionDeEmpresa = miResult.getString(3);
+            String codigoDeEmpresa = miResult.getString(4);
+            empresaEncontrada = new Empresa(tipoEmpresa, nombreDeEmpresa, direccionDeEmpresa, codigoDeEmpresa);
+        }
+        nuevaConexion.cerrarConexion();
+        return empresaEncontrada;
+    }
+    
 }

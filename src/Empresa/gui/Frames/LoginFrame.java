@@ -5,6 +5,13 @@
  */
 package Empresa.gui.Frames;
 
+import Empresa.backend.Entidades.Empleado;
+import Empresa.backend.Entidades.Empresa;
+import Empresa.backend.Registro.BusquedaDeEmpleados;
+import Empresa.backend.Registro.BusquedaDeEmpresas;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -123,16 +130,48 @@ public class LoginFrame extends javax.swing.JFrame {
     private void inicioSesionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioSesionButtonActionPerformed
         String id = this.idInicioSesionTextField.getText();
         String contrasena = this.contrasenaSesionTextField.getText();
-        if(id.isEmpty() || contrasena.isEmpty()){
+        if (id.isEmpty() || contrasena.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Faltan datos, intente de nuevo");
             this.idInicioSesionTextField.setText("");
             this.contrasenaSesionTextField.setText("");
-        }else{
-            if(id.equals("ROOT") && contrasena.equals("ROOT")){
-                JOptionPane.showMessageDialog(this, "Super usuario encontrado");
-                this.dispose();
-                RootFrame nuevoRoot = new RootFrame();
-                nuevoRoot.setVisible(true);
+        } else if (id.equals("ROOT") && contrasena.equals("ROOT")) {
+
+            JOptionPane.showMessageDialog(this, "Super usuario encontrado");
+            this.dispose();
+            RootFrame nuevoRoot = new RootFrame();
+            nuevoRoot.setVisible(true);
+
+        } else {
+            BusquedaDeEmpleados nuevaBusqueda = new BusquedaDeEmpleados();
+            try {
+                Empleado empleadoEncontrado = nuevaBusqueda.buscarEmpleado(id, contrasena);
+                if (empleadoEncontrado == null) {
+                    JOptionPane.showMessageDialog(this, "No se encontro el empleado");
+                } else {
+                    BusquedaDeEmpresas nuevaBusquedaE = new BusquedaDeEmpresas();
+                    Empresa empresaEncontrada = nuevaBusquedaE.buscarEmpresa(empleadoEncontrado.getCodigoDeEmpresaParaEmpleado());
+                    String tipoDeEmpresa = empresaEncontrada.getTipoDeEmpresa();
+                    String tipoDeEmpleado = empleadoEncontrado.getTipoDeEmpleado();
+                    if (tipoDeEmpresa.equals("Hotel")) {
+                        if (tipoDeEmpleado.equals("Gerente")) {
+                            this.dispose();
+                            RootFrame frameGerenteHotel = new RootFrame(empresaEncontrada);
+                            frameGerenteHotel.setVisible(true);
+                        } else {//Es resepcionista
+
+                        }
+                    } else {//La empresa sera restaurante
+                        if (tipoDeEmpleado.equals("Gerente")) {
+                            this.dispose();
+                            RootFrame frameGerenteRestaurante = new RootFrame(empresaEncontrada,true);
+                            frameGerenteRestaurante.setVisible(true);
+                        } else {//Es camarero
+
+                        }
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(LoginFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_inicioSesionButtonActionPerformed

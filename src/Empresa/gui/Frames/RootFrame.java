@@ -5,15 +5,18 @@
  */
 package Empresa.gui.Frames;
 
+import Empresa.backend.Entidades.Alimento;
 import Empresa.backend.Entidades.Empleado;
 import Empresa.backend.Entidades.Empresa;
 import Empresa.backend.Entidades.Habitacion;
 import Empresa.backend.Registro.ActualizacionDeEmpleado;
 import Empresa.backend.Registro.ActualizacionDeHabitacion;
+import Empresa.backend.Registro.BusquedaDeAlimentos;
 import Empresa.backend.Registro.BusquedaDeEmpleados;
 import Empresa.backend.Registro.BusquedaDeEmpresas;
 import Empresa.backend.Registro.BusquedaDeHabitaciones;
 import Empresa.backend.Registro.EliminacionDeEmpleados;
+import Empresa.backend.Registro.RegistroDeAlimentos;
 import Empresa.backend.Registro.RegistroDeEmpleados;
 import Empresa.backend.Registro.RegistroDeEmpresas;
 import Empresa.backend.Registro.RegistroDeHabitacion;
@@ -25,6 +28,8 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import java.awt.Component;
+import javax.swing.GroupLayout;
 
 /**
  *
@@ -34,12 +39,13 @@ public class RootFrame extends javax.swing.JFrame {
 
     private ArrayList<Empresa> hotelesActuales;
     private ArrayList<Empresa> restaurantesActuales;
+    private ArrayList<Alimento> listaDeAlimentos;
     private Empresa hotelSeleccionado;//sSolo para gerente de hotel
     private ArrayList<Empleado> empleadosDeHotelSeleccionado;//Solo para gerente de hotel
     private ArrayList<Habitacion> habitacionesDeHotel;
     private String idEmpleadoA_Modificar;
     private String idEmpleadoModificarRestaurante;
-    private Integer numeroDeHabitacionA_Modificar;
+    private Habitacion habitacionA_Modificar;
     private Empresa restauranteSeleccionado;
     private ArrayList<Empleado> empleadosDeRestauranteSeleccionado;
 
@@ -49,12 +55,42 @@ public class RootFrame extends javax.swing.JFrame {
     public RootFrame() {
         this.hotelSeleccionado = null;
         this.idEmpleadoA_Modificar = null;
-        this.numeroDeHabitacionA_Modificar = null;
+        this.habitacionA_Modificar = null;
         this.idEmpleadoModificarRestaurante = null;
         this.hotelesActuales = new ArrayList<>();
         this.restaurantesActuales = new ArrayList<>();
         this.habitacionesDeHotel = new ArrayList<>();
+        this.listaDeAlimentos = new ArrayList<>();
         initComponents();
+    }
+
+    public RootFrame(Empresa hotelSeleccionado) {
+        this.hotelSeleccionado = hotelSeleccionado;
+        this.habitacionesDeHotel = new ArrayList<>();
+        initComponents();
+        this.nombreDeHotelEscogidoLabel.setText("Nombre:" + this.hotelSeleccionado.getNombreDeEmpresa());
+        this.direccionDeHotelEscogidoLabel.setText("Direccion:" + this.hotelSeleccionado.getDireccionDeEmpresa());
+        this.nombreHotelActualLabel1.setText("Nombre:" + this.hotelSeleccionado.getNombreDeEmpresa());
+        this.direccionActualHotel1Label.setText("Direccion:" + this.hotelSeleccionado.getDireccionDeEmpresa());
+        for (Component component : accionVariosHotelesPanel.getComponents()) {
+            component.setEnabled(false);
+        }
+        this.generalPanelSlider.nextPanel(1, this.hotelPanel, generalPanelSlider.right);
+        this.pasarARestaurantesButton.setEnabled(false);
+    }
+
+    public RootFrame(Empresa restauranteSeleccionado, boolean validacion) {
+        this.restauranteSeleccionado = restauranteSeleccionado;
+        this.listaDeAlimentos = new ArrayList<>();
+        initComponents();
+        this.nombreRestaurante1Label.setText(this.restauranteSeleccionado.getNombreDeEmpresa());
+        this.direccionRestaurante1Label.setText(this.restauranteSeleccionado.getDireccionDeEmpresa());
+        this.nombreRestaurante1Label1.setText(this.restauranteSeleccionado.getNombreDeEmpresa());
+        this.direccionRestaurante1Label1.setText(this.restauranteSeleccionado.getDireccionDeEmpresa());
+        for (Component component : this.rootRestaurantePanel.getComponents()) {
+            component.setEnabled(false);
+        }
+        this.regresarAHotelesButton.setEnabled(false);
     }
 
     /**
@@ -70,7 +106,7 @@ public class RootFrame extends javax.swing.JFrame {
         areaRestaurantePanel = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         regresarAHotelesButton = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
+        rootRestaurantePanel = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
@@ -89,32 +125,27 @@ public class RootFrame extends javax.swing.JFrame {
         jPanel12 = new javax.swing.JPanel();
         jLabel31 = new javax.swing.JLabel();
         jLabel35 = new javax.swing.JLabel();
-        jLabel36 = new javax.swing.JLabel();
-        jLabel37 = new javax.swing.JLabel();
         jLabel38 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
-        jPasswordField5 = new javax.swing.JPasswordField();
-        jTextField14 = new javax.swing.JTextField();
-        jButton19 = new javax.swing.JButton();
-        jButton20 = new javax.swing.JButton();
-        jComboBox5 = new javax.swing.JComboBox<>();
+        nombreAlimentoNuevoTextField = new javax.swing.JTextField();
+        costoNuevoAlimentoTextField = new javax.swing.JTextField();
+        guardarNuevoAlimentoButton = new javax.swing.JButton();
+        cancelarNuevoAliemtnoButton = new javax.swing.JButton();
         jLabel39 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         nombreRestaurante1Label1 = new javax.swing.JLabel();
         direccionRestaurante1Label1 = new javax.swing.JLabel();
         jLabel40 = new javax.swing.JLabel();
         jPanel13 = new javax.swing.JPanel();
-        jLabel41 = new javax.swing.JLabel();
         jLabel42 = new javax.swing.JLabel();
         jLabel43 = new javax.swing.JLabel();
-        jLabel44 = new javax.swing.JLabel();
-        jTextField15 = new javax.swing.JTextField();
+        nombreModificadoAlimentoTextField1 = new javax.swing.JTextField();
         jComboBox6 = new javax.swing.JComboBox<>();
-        jPasswordField6 = new javax.swing.JPasswordField();
-        jTextField16 = new javax.swing.JTextField();
+        costoModificadoAliementoTextField = new javax.swing.JTextField();
         jButton21 = new javax.swing.JButton();
         jButton22 = new javax.swing.JButton();
         jButton23 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jLabel41 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         alimentosEnRestauranteTable = new javax.swing.JTable();
         empleados1RestaurantePanel = new javax.swing.JPanel();
@@ -159,7 +190,7 @@ public class RootFrame extends javax.swing.JFrame {
         hotelPanel = new javax.swing.JPanel();
         pasarARestaurantesButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        accionVariosHotelesPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -315,73 +346,73 @@ public class RootFrame extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+        javax.swing.GroupLayout rootRestaurantePanelLayout = new javax.swing.GroupLayout(rootRestaurantePanel);
+        rootRestaurantePanel.setLayout(rootRestaurantePanelLayout);
+        rootRestaurantePanelLayout.setHorizontalGroup(
+            rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootRestaurantePanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootRestaurantePanelLayout.createSequentialGroup()
+                        .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootRestaurantePanelLayout.createSequentialGroup()
                                 .addComponent(cancelarRestauranteButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(crearRestauranteButton))
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(rootRestaurantePanelLayout.createSequentialGroup()
+                                .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel18)
                                     .addComponent(jLabel19))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(direccionDeRestauranteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(nombreDeRestauranteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(40, 40, 40))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rootRestaurantePanelLayout.createSequentialGroup()
                         .addComponent(jLabel17)
                         .addGap(114, 114, 114)))
                 .addGap(33, 33, 33)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(rootRestaurantePanelLayout.createSequentialGroup()
                         .addComponent(buscarRestauranteButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(seleccionarRestauranteButton))
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel20)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(212, 212, 212)
                 .addComponent(jButton11)
                 .addGap(635, 635, 635))
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        rootRestaurantePanelLayout.setVerticalGroup(
+            rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(rootRestaurantePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel17))
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(rootRestaurantePanelLayout.createSequentialGroup()
+                        .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel18)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
+                            .addGroup(rootRestaurantePanelLayout.createSequentialGroup()
                                 .addGap(2, 2, 2)
                                 .addComponent(nombreDeRestauranteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(16, 16, 16)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel19)
                             .addComponent(direccionDeRestauranteTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(crearRestauranteButton)
                             .addComponent(cancelarRestauranteButton))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
+                    .addGroup(rootRestaurantePanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(rootRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(seleccionarRestauranteButton)
                                 .addComponent(buscarRestauranteButton))
                             .addComponent(jButton11))
@@ -396,27 +427,25 @@ public class RootFrame extends javax.swing.JFrame {
         jPanel12.setBackground(new java.awt.Color(102, 102, 102));
         jPanel12.setForeground(new java.awt.Color(102, 102, 102));
 
-        jLabel31.setText("Crear empleado de restaurante seleccionado");
+        jLabel31.setText("Crear alimento para todo restaurante:");
 
         jLabel35.setText("Nombre:");
 
-        jLabel36.setText("Tipo:");
+        jLabel38.setText("Costo:");
 
-        jLabel37.setText("Contrasena:");
+        guardarNuevoAlimentoButton.setText("Guardar");
+        guardarNuevoAlimentoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardarNuevoAlimentoButtonActionPerformed(evt);
+            }
+        });
 
-        jLabel38.setText("Id:");
-
-        jTextField13.setText("jTextField3");
-
-        jPasswordField5.setText("jPasswordField1");
-
-        jTextField14.setText("jTextField5");
-
-        jButton19.setText("Guardar");
-
-        jButton20.setText("Cancelar");
-
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cancelarNuevoAliemtnoButton.setText("Cancelar");
+        cancelarNuevoAliemtnoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelarNuevoAliemtnoButtonActionPerformed(evt);
+            }
+        });
 
         jLabel39.setText("Informacion de restaurante seleccionado");
 
@@ -436,43 +465,34 @@ public class RootFrame extends javax.swing.JFrame {
         jPanel12Layout.setHorizontalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addGap(6, 200, Short.MAX_VALUE)
-                        .addComponent(jButton20)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton19)
-                        .addGap(14, 14, 14))
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(jLabel38)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31))))
-            .addGroup(jPanel12Layout.createSequentialGroup()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel12Layout.createSequentialGroup()
-                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel35)
-                                    .addComponent(jLabel37)
-                                    .addComponent(jLabel36))
-                                .addGap(56, 56, 56)
-                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPasswordField5, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(nombreRestaurante1Label1)
-                            .addComponent(direccionRestaurante1Label1)))
+                            .addComponent(direccionRestaurante1Label1)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(jPanel12Layout.createSequentialGroup()
+                                    .addComponent(jLabel38)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(costoNuevoAlimentoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel12Layout.createSequentialGroup()
+                                    .addComponent(jLabel35)
+                                    .addGap(84, 84, 84)
+                                    .addComponent(nombreAlimentoNuevoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGap(64, 64, 64)
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel39)
                             .addComponent(jLabel31)))
                     .addComponent(jButton4))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cancelarNuevoAliemtnoButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(guardarNuevoAlimentoButton)
+                .addGap(16, 16, 16))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -488,24 +508,16 @@ public class RootFrame extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel35)
-                    .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel36, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jComboBox5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel37)
-                    .addComponent(jPasswordField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nombreAlimentoNuevoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel38)
-                    .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
+                    .addComponent(costoNuevoAlimentoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton20)
-                    .addComponent(jButton19))
-                .addGap(15, 15, 15)
+                    .addComponent(cancelarNuevoAliemtnoButton)
+                    .addComponent(guardarNuevoAlimentoButton))
+                .addGap(105, 105, 105)
                 .addComponent(jButton4))
         );
 
@@ -513,21 +525,11 @@ public class RootFrame extends javax.swing.JFrame {
 
         jPanel13.setBackground(new java.awt.Color(153, 153, 153));
 
-        jLabel41.setText("Nombre:");
+        jLabel42.setText("Costo:");
 
-        jLabel42.setText("Tipo:");
+        jLabel43.setText("Estado:");
 
-        jLabel43.setText("Contrasena:");
-
-        jLabel44.setText("Id:");
-
-        jTextField15.setText("jTextField3");
-
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jPasswordField6.setText("jPasswordField1");
-
-        jTextField16.setText("jTextField5");
+        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Desactivado", "Activado" }));
 
         jButton21.setText("Cancelar");
 
@@ -535,75 +537,86 @@ public class RootFrame extends javax.swing.JFrame {
 
         jButton23.setText("Modificar");
 
+        jButton6.setText("Buscar");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
+        jLabel41.setText("Nombre:");
+
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
         jPanel13Layout.setHorizontalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel42)
-                    .addComponent(jLabel43)
-                    .addComponent(jLabel41)
-                    .addComponent(jLabel44))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPasswordField6, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox6, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField15, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(70, 70, 70))
+                        .addContainerGap()
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel43)
+                            .addComponent(jLabel41))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                        .addComponent(jButton21)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton22)
-                        .addGap(14, 14, 14))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel42)
+                        .addGap(18, 18, 18)))
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jComboBox6, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(nombreModificadoAlimentoTextField1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                    .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(costoModificadoAliementoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(62, 62, 62))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton23)
-                .addGap(29, 29, 29))
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                        .addComponent(jButton6)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton23)
+                        .addGap(29, 29, 29))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                        .addComponent(jButton21)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton22)
+                        .addGap(32, 32, 32))))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel13Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton23)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton23)
+                    .addComponent(jButton6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
-                        .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25)
-                        .addComponent(jPasswordField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22)
-                        .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(nombreModificadoAlimentoTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton22)
-                            .addComponent(jButton21)))
-                    .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addComponent(jLabel41)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel42)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel43)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel44)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                            .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel43))
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel42)
+                            .addComponent(costoModificadoAliementoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton21)
+                            .addComponent(jButton22)))
+                    .addComponent(jLabel41))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         alimentosEnRestauranteTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Costo", "Estado"
             }
         ));
         jScrollPane4.setViewportView(alimentosEnRestauranteTable);
@@ -624,7 +637,7 @@ public class RootFrame extends javax.swing.JFrame {
                         .addGroup(alimentosRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 51, Short.MAX_VALUE))
+                .addGap(0, 76, Short.MAX_VALUE))
         );
         alimentosRestaurantePanelLayout.setVerticalGroup(
             alimentosRestaurantePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -635,9 +648,9 @@ public class RootFrame extends javax.swing.JFrame {
                         .addComponent(jLabel40)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(26, 26, 26)
                         .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         panelRestaurantePanelSlider.add(alimentosRestaurantePanel, "card2");
@@ -1002,7 +1015,7 @@ public class RootFrame extends javax.swing.JFrame {
                         .addComponent(jLabel16)
                         .addGap(244, 244, 244)
                         .addComponent(regresarAHotelesButton))
-                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(rootRestaurantePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(125, Short.MAX_VALUE))
             .addGroup(areaRestaurantePanelLayout.createSequentialGroup()
                 .addComponent(panelRestaurantePanelSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 963, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1016,7 +1029,7 @@ public class RootFrame extends javax.swing.JFrame {
                     .addComponent(jLabel16)
                     .addComponent(regresarAHotelesButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rootRestaurantePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelRestaurantePanelSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1080,65 +1093,65 @@ public class RootFrame extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout accionVariosHotelesPanelLayout = new javax.swing.GroupLayout(accionVariosHotelesPanel);
+        accionVariosHotelesPanel.setLayout(accionVariosHotelesPanelLayout);
+        accionVariosHotelesPanelLayout.setHorizontalGroup(
+            accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, accionVariosHotelesPanelLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(accionVariosHotelesPanelLayout.createSequentialGroup()
                         .addComponent(cancelarHotelButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(crearHotelButton))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(accionVariosHotelesPanelLayout.createSequentialGroup()
+                            .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel3)
                                 .addComponent(jLabel4))
                             .addGap(30, 30, 30)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(direccionDeHotelTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
                                 .addComponent(nombreDeHotelTextField)))
                         .addComponent(jLabel2)))
                 .addGap(50, 50, 50)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(accionVariosHotelesPanelLayout.createSequentialGroup()
                         .addComponent(actualizarHotelesButton)
                         .addGap(18, 18, 18)
                         .addComponent(seleccionarHotelButton))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel5)))
                 .addGap(635, 635, 635))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        accionVariosHotelesPanelLayout.setVerticalGroup(
+            accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(accionVariosHotelesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel5))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(accionVariosHotelesPanelLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
                             .addComponent(nombreDeHotelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(22, 22, 22)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(direccionDeHotelTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(crearHotelButton)
                             .addComponent(cancelarHotelButton))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, accionVariosHotelesPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(accionVariosHotelesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(seleccionarHotelButton)
                             .addComponent(actualizarHotelesButton))
                         .addGap(4, 4, 4)))
@@ -1178,7 +1191,7 @@ public class RootFrame extends javax.swing.JFrame {
 
         tiposDeEmpleadoComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gerente", "Recepcionista" }));
 
-        jLabel32.setText("Informacion de hotel seleccionado(EMPLEADOS)");
+        jLabel32.setText("Creasion de alimentos para restaurantes");
 
         nombreDeHotelEscogidoLabel.setText("Nombre:");
 
@@ -1200,7 +1213,7 @@ public class RootFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addComponent(cancelarNuevoButton)
                 .addGap(18, 18, 18)
                 .addComponent(guardarNuevoButton)
@@ -1231,7 +1244,7 @@ public class RootFrame extends javax.swing.JFrame {
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(direccionDeHotelEscogidoLabel)
                             .addComponent(nombreDeHotelEscogidoLabel))))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(idNuevoTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1435,21 +1448,22 @@ public class RootFrame extends javax.swing.JFrame {
         );
         empleadosPanelLayout.setVerticalGroup(
             empleadosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, empleadosPanelLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLabel6)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(empleadosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelarButton)
-                    .addComponent(guardarModificacionButton))
-                .addContainerGap(65, Short.MAX_VALUE))
             .addGroup(empleadosPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(empleadosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(empleadosPanelLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(empleadosPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cancelarButton)
+                            .addComponent(guardarModificacionButton)))
+                    .addGroup(empleadosPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1735,9 +1749,9 @@ public class RootFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buscarHabitacionesButton)
-                    .addComponent(modificarHabitacionButton))
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(modificarHabitacionButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(buscarHabitacionesButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1785,7 +1799,7 @@ public class RootFrame extends javax.swing.JFrame {
                                 .addComponent(pasarARestaurantesButton))
                             .addGroup(hotelPanelLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(accionVariosHotelesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(panelDeManejoHotelPanelSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -1799,7 +1813,7 @@ public class RootFrame extends javax.swing.JFrame {
                         .addComponent(pasarARestaurantesButton))
                     .addComponent(jLabel1))
                 .addGap(4, 4, 4)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(accionVariosHotelesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelDeManejoHotelPanelSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -2097,18 +2111,25 @@ public class RootFrame extends javax.swing.JFrame {
         } else {
             RegistroDeHabitacion nuevoRegistro = new RegistroDeHabitacion();
             GeneradorDeCodigos.generarCodigo();
-            Habitacion habitacionNueva = new Habitacion(this.hotelSeleccionado.getCodigoDeEmpresa(), Integer.parseInt(piso), tipo, Double.parseDouble(costoUso), Double.parseDouble(costoMantenimiento), Integer.parseInt(numero), "1");
+            Habitacion habitacionNueva = new Habitacion(GeneradorDeCodigos.generarCodigo(), this.hotelSeleccionado.getCodigoDeEmpresa(), Integer.parseInt(piso), tipo, Double.parseDouble(costoUso), Double.parseDouble(costoMantenimiento), Integer.parseInt(numero), "1");
             try {
-                nuevoRegistro.escribirHabitacion(habitacionNueva);
-                JOptionPane.showMessageDialog(this, "Se ha creado la habitacion para el hotel");
-                DefaultTableModel miModelo = (DefaultTableModel) this.habitacionesDisponiblesTable.getModel();
-                miModelo.setRowCount(0);
-                //Llenar tabla de habitaciones
-                BusquedaDeHabitaciones nuevaBuequeda = new BusquedaDeHabitaciones();
-                this.habitacionesDeHotel = nuevaBuequeda.buscarEmpresas(this.hotelSeleccionado.getCodigoDeEmpresa());
-                for (Habitacion habitacion : this.habitacionesDeHotel) {
-                    miModelo.addRow(new Object[]{habitacion.getNumeroDeHabitacion(), habitacion.getPiso(), habitacion.getTipoDeHabitacion(), habitacion.getCostoPorNoche(), habitacion.getCostoDeMantnimiento(), habitacion.getEstaActiva()});
+                BusquedaDeHabitaciones busquedaHabitacion = new BusquedaDeHabitaciones();
+                Habitacion habitacionDevuleta = busquedaHabitacion.buscarHabitacionRepetida(this.hotelSeleccionado.getCodigoDeEmpresa(), Integer.valueOf(numero));
+                if (habitacionDevuleta != null) {
+                    JOptionPane.showMessageDialog(this, "Y existe la habitacion con el numeroindicado en el hotel seleccionado");
+                } else {
+                    nuevoRegistro.escribirHabitacion(habitacionNueva);
+                    JOptionPane.showMessageDialog(this, "Se ha creado la habitacion para el hotel");
+                    DefaultTableModel miModelo = (DefaultTableModel) this.habitacionesDisponiblesTable.getModel();
+                    miModelo.setRowCount(0);
+                    //Llenar tabla de habitaciones
+                    BusquedaDeHabitaciones nuevaBuequeda = new BusquedaDeHabitaciones();
+                    this.habitacionesDeHotel = nuevaBuequeda.buscarHabitaciones(this.hotelSeleccionado.getCodigoDeEmpresa());
+                    for (Habitacion habitacion : this.habitacionesDeHotel) {
+                        miModelo.addRow(new Object[]{habitacion.getNumeroDeHabitacion(), habitacion.getPiso(), habitacion.getTipoDeHabitacion(), habitacion.getCostoPorNoche(), habitacion.getCostoDeMantnimiento(), habitacion.getEstaActiva()});
+                    }
                 }
+
             } catch (SQLException ex) {
                 if (ex instanceof MySQLIntegrityConstraintViolationException) {
                     JOptionPane.showMessageDialog(this, "La habitacion con numero:" + numero + " " + "YA EXISTE");
@@ -2133,7 +2154,7 @@ public class RootFrame extends javax.swing.JFrame {
             miModelo.setRowCount(0);
             //Llenar tabla de habitaciones
             BusquedaDeHabitaciones nuevaBuequeda = new BusquedaDeHabitaciones();
-            this.habitacionesDeHotel = nuevaBuequeda.buscarEmpresas(this.hotelSeleccionado.getCodigoDeEmpresa());
+            this.habitacionesDeHotel = nuevaBuequeda.buscarHabitaciones(this.hotelSeleccionado.getCodigoDeEmpresa());
             for (Habitacion habitacion : this.habitacionesDeHotel) {
                 miModelo.addRow(new Object[]{habitacion.getNumeroDeHabitacion(), habitacion.getPiso(), habitacion.getTipoDeHabitacion(), habitacion.getCostoPorNoche(), habitacion.getCostoDeMantnimiento(), habitacion.getEstaActiva()});
             }
@@ -2148,7 +2169,7 @@ public class RootFrame extends javax.swing.JFrame {
         if (habitacionSeleccionada == -1) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar una habitacion");
         } else {
-            this.numeroDeHabitacionA_Modificar = this.habitacionesDeHotel.get(habitacionSeleccionada).getNumeroDeHabitacion();
+            this.habitacionA_Modificar = this.habitacionesDeHotel.get(habitacionSeleccionada);
             Habitacion habitacionSinMod = this.habitacionesDeHotel.get(habitacionSeleccionada);
             this.pisoModificadoTextField.setText(String.valueOf(habitacionSinMod.getPiso()));
             this.tipoModificadoTextField.setText(habitacionSinMod.getTipoDeHabitacion());
@@ -2170,19 +2191,20 @@ public class RootFrame extends javax.swing.JFrame {
         String costoNuevo = this.costoTextField.getText();
         String costoMNuevo = this.costoMantenimientoModTextField.getText();
         int activacion = this.estadoModComboBox.getSelectedIndex();
-        if (pisoNuevo.isEmpty() || nuevoTipo.isEmpty() || costoNuevo.isEmpty() || costoMNuevo.isEmpty() || this.numeroDeHabitacionA_Modificar == null) {
+        if (pisoNuevo.isEmpty() || nuevoTipo.isEmpty() || costoNuevo.isEmpty() || costoMNuevo.isEmpty() || this.habitacionA_Modificar == null) {
             JOptionPane.showMessageDialog(this, "Faltan campos por llenar, o no ha seleccionado una habitacion");
         } else {
             ActualizacionDeHabitacion nuevaActualizacion = new ActualizacionDeHabitacion();
-            Habitacion nuevaHabitacion = new Habitacion(this.hotelSeleccionado.getCodigoDeEmpresa(), Integer.valueOf(pisoNuevo), nuevoTipo, Double.parseDouble(costoNuevo), Double.parseDouble(costoMNuevo), this.numeroDeHabitacionA_Modificar, String.valueOf(activacion));
+
+            Habitacion nuevaHabitacion = new Habitacion(this.habitacionA_Modificar.getCodigoDeHabitacion(), this.hotelSeleccionado.getCodigoDeEmpresa(), Integer.valueOf(pisoNuevo), nuevoTipo, Double.parseDouble(costoNuevo), Double.parseDouble(costoMNuevo), this.habitacionA_Modificar.getNumeroDeHabitacion(), String.valueOf(activacion));
             try {
-                nuevaActualizacion.actualizarHabitacion(nuevaHabitacion, this.numeroDeHabitacionA_Modificar);
+                nuevaActualizacion.actualizarHabitacion(nuevaHabitacion, this.habitacionA_Modificar.getCodigoDeHabitacion());
                 JOptionPane.showMessageDialog(this, "Se ha actualizado la habitacion");
                 DefaultTableModel miModelo = (DefaultTableModel) this.habitacionesDisponiblesTable.getModel();
                 miModelo.setRowCount(0);
                 //Llenar tabla de habitaciones
                 BusquedaDeHabitaciones nuevaBuequeda = new BusquedaDeHabitaciones();
-                this.habitacionesDeHotel = nuevaBuequeda.buscarEmpresas(this.hotelSeleccionado.getCodigoDeEmpresa());
+                this.habitacionesDeHotel = nuevaBuequeda.buscarHabitaciones(this.hotelSeleccionado.getCodigoDeEmpresa());
                 for (Habitacion habitacion : this.habitacionesDeHotel) {
                     miModelo.addRow(new Object[]{habitacion.getNumeroDeHabitacion(), habitacion.getPiso(), habitacion.getTipoDeHabitacion(), habitacion.getCostoPorNoche(), habitacion.getCostoDeMantnimiento(), habitacion.getEstaActiva()});
                 }
@@ -2195,7 +2217,7 @@ public class RootFrame extends javax.swing.JFrame {
                 this.costoTextField.setText("");
                 this.costoMantenimientoModTextField.setText("");
             }
-            this.numeroDeHabitacionA_Modificar = null;
+            this.habitacionA_Modificar = null;
         }
     }//GEN-LAST:event_guardarModHabitacionButtonActionPerformed
 
@@ -2423,8 +2445,61 @@ public class RootFrame extends javax.swing.JFrame {
     private void tipoEmpleadoRComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tipoEmpleadoRComboBoxActionPerformed
     }//GEN-LAST:event_tipoEmpleadoRComboBoxActionPerformed
 
+    private void cancelarNuevoAliemtnoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarNuevoAliemtnoButtonActionPerformed
+        this.nombreAlimentoNuevoTextField.setText("");
+        this.costoNuevoAlimentoTextField.setText("");
+    }//GEN-LAST:event_cancelarNuevoAliemtnoButtonActionPerformed
+
+    private void guardarNuevoAlimentoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarNuevoAlimentoButtonActionPerformed
+        String nombre = this.nombreAlimentoNuevoTextField.getText();
+        String costo = this.costoNuevoAlimentoTextField.getText();
+        if (nombre.isEmpty() || costo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Faltan datos por llenar");
+        } else {
+            try {
+                Alimento nuevoAlimento = new Alimento(nombre, Double.parseDouble(costo), "1");
+                RegistroDeAlimentos nuevoRegistro = new RegistroDeAlimentos();
+                JOptionPane.showMessageDialog(this, "Alimento creado");
+                nuevoRegistro.escribirAlimento(nuevoAlimento);
+                DefaultTableModel miModelo = (DefaultTableModel) this.alimentosEnRestauranteTable.getModel();
+                miModelo.setRowCount(0);
+                BusquedaDeAlimentos nuevaBusqueda = new BusquedaDeAlimentos();
+                this.listaDeAlimentos = nuevaBusqueda.buscarAlimentos();
+                for (Alimento alimento : listaDeAlimentos) {
+                    miModelo.addRow(new Object[]{alimento.getNombre(), alimento.getCosto(), alimento.getEstaActivo()});
+                }
+            } catch (SQLException ex) {
+                if (ex instanceof MySQLIntegrityConstraintViolationException) {
+                    JOptionPane.showMessageDialog(this, "EL ALIMENTO CON NOMBRE:" + nombre + " " + "YA EXISTE");
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Existio un error al conectar a la base de datos");
+                }
+                //Logger.getLogger(RootFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                this.nombreAlimentoNuevoTextField.setText("");
+                this.costoNuevoAlimentoTextField.setText("");
+            }
+        }
+    }//GEN-LAST:event_guardarNuevoAlimentoButtonActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        try {
+            DefaultTableModel miModelo = (DefaultTableModel) this.alimentosEnRestauranteTable.getModel();
+            miModelo.setRowCount(0);
+            BusquedaDeAlimentos nuevaBusqueda = new BusquedaDeAlimentos();
+            this.listaDeAlimentos = nuevaBusqueda.buscarAlimentos();
+            for (Alimento alimento : listaDeAlimentos) {
+                miModelo.addRow(new Object[]{alimento.getNombre(), alimento.getCosto(), alimento.getEstaActivo()});
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Existio un error al conectar con la base de datos");
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel accionVariosHotelesPanel;
     private javax.swing.JButton actualizarHotelesButton;
     private javax.swing.JTable alimentosEnRestauranteTable;
     private javax.swing.JPanel alimentosRestaurantePanel;
@@ -2438,6 +2513,7 @@ public class RootFrame extends javax.swing.JFrame {
     private javax.swing.JButton cancelarHotelButton;
     private javax.swing.JButton cancelarModHabitacionButton;
     private javax.swing.JButton cancelarNuevaHabitacionButton;
+    private javax.swing.JButton cancelarNuevoAliemtnoButton;
     private javax.swing.JButton cancelarNuevoButton;
     private javax.swing.JButton cancelarRestauranteButton;
     private javax.swing.JPasswordField contrasenaModificadaPasswordField;
@@ -2447,6 +2523,8 @@ public class RootFrame extends javax.swing.JFrame {
     private javax.swing.JTextField costoHabitacionNuevaField;
     private javax.swing.JTextField costoManenimientoHabitacionNuevaTextField;
     private javax.swing.JTextField costoMantenimientoModTextField;
+    private javax.swing.JTextField costoModificadoAliementoTextField;
+    private javax.swing.JTextField costoNuevoAlimentoTextField;
     private javax.swing.JTextField costoTextField;
     private javax.swing.JButton crearHotelButton;
     private javax.swing.JButton crearNuevaHabitacionButton;
@@ -2468,6 +2546,7 @@ public class RootFrame extends javax.swing.JFrame {
     private javax.swing.JButton guardarEmpleadoNuevoRButton;
     private javax.swing.JButton guardarModHabitacionButton;
     private javax.swing.JButton guardarModificacionButton;
+    private javax.swing.JButton guardarNuevoAlimentoButton;
     private javax.swing.JButton guardarNuevoButton;
     private javax.swing.JTable habitacionesDisponiblesTable;
     private javax.swing.JPanel habitacionesPanel;
@@ -2479,16 +2558,14 @@ public class RootFrame extends javax.swing.JFrame {
     private javax.swing.JTextField idNuevoTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton20;
     private javax.swing.JButton jButton21;
     private javax.swing.JButton jButton22;
     private javax.swing.JButton jButton23;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -2515,8 +2592,6 @@ public class RootFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
-    private javax.swing.JLabel jLabel36;
-    private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
@@ -2524,7 +2599,6 @@ public class RootFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel45;
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
@@ -2563,29 +2637,23 @@ public class RootFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel17;
     private javax.swing.JPanel jPanel18;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPasswordField jPasswordField5;
-    private javax.swing.JPasswordField jPasswordField6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
-    private javax.swing.JTextField jTextField16;
     private javax.swing.JButton modificarEmpleadoButton;
     private javax.swing.JButton modificarEmpleadoRestauranteButton;
     private javax.swing.JButton modificarHabitacionButton;
+    private javax.swing.JTextField nombreAlimentoNuevoTextField;
     private javax.swing.JLabel nombreDeHotelEscogidoLabel;
     private javax.swing.JTextField nombreDeHotelTextField;
     private javax.swing.JTextField nombreDeRestauranteTextField;
     private javax.swing.JLabel nombreHotelActualLabel1;
+    private javax.swing.JTextField nombreModificadoAlimentoTextField1;
     private javax.swing.JTextField nombreModificadoTextField;
     private javax.swing.JTextField nombreNuevoEmpleadoRTextField;
     private javax.swing.JLabel nombreRestaurante1Label;
@@ -2604,6 +2672,7 @@ public class RootFrame extends javax.swing.JFrame {
     private javax.swing.JTextField pisoHotelNuevoTextField;
     private javax.swing.JTextField pisoModificadoTextField;
     private javax.swing.JButton regresarAHotelesButton;
+    private javax.swing.JPanel rootRestaurantePanel;
     private javax.swing.JButton seleccionarHotelButton;
     private javax.swing.JButton seleccionarRestauranteButton;
     private javax.swing.JTable tablaDeEmpleadosTable;

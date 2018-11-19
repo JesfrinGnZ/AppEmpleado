@@ -10,6 +10,8 @@ package Empresa.backend.Entidades;
  * @author jesfrin
  */
 public class Habitacion {
+    
+    private String codigoDeHabitacion;
     private String CodigoDeHotel;
     private int Piso;
     private String TipoDeHabitacion;
@@ -18,7 +20,8 @@ public class Habitacion {
     private int numeroDeHabitacion;
     private String estaActiva;
 
-    public Habitacion(String CodigoDeHotel, int Piso, String TipoDeHabitacion, double CostoPorNoche, double CostoDeMantnimiento, int numeroDeHabitacion,String estaActiva) {
+    public Habitacion(String codigoDeHabitacion,String CodigoDeHotel, int Piso, String TipoDeHabitacion, double CostoPorNoche, double CostoDeMantnimiento, int numeroDeHabitacion,String estaActiva) {
+        this.codigoDeHabitacion = codigoDeHabitacion;
         this.CodigoDeHotel = CodigoDeHotel;
         this.Piso = Piso;
         this.TipoDeHabitacion = TipoDeHabitacion;
@@ -28,6 +31,16 @@ public class Habitacion {
         this.estaActiva=estaActiva;
     }
 
+    public String getCodigoDeHabitacion() {
+        return codigoDeHabitacion;
+    }
+
+    public void setCodigoDeHabitacion(String codigoDeHabitacion) {
+        this.codigoDeHabitacion = codigoDeHabitacion;
+    }
+
+    
+    
     public String getCodigoDeHotel() {
         return CodigoDeHotel;
     }
